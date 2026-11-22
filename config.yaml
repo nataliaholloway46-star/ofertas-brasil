@@ -7,9 +7,17 @@ viaje:
   adultos: 2
   fecha_desde: "2027-03-01"     # primera fecha de salida posible
   fecha_hasta: "2027-04-30"     # ultima fecha de regreso posible
-  noches_min: 7
+  noches_min: 6
   noches_max: 10
   presupuesto_max_clp: null     # null = sin limite
+
+# Objetivo ideal: precio TOTAL (vuelo + hotel) POR PERSONA.
+# Las opciones dentro del rango suben al tope del ranking; entre ellas
+# gana la que tenga mas noches y mejor hotel.
+objetivo:
+  por_persona_min: 350000
+  por_persona_max: 450000
+  priorizar_rango: true
 
 # Destinos. activo: true/false para incluir o sacar.
 # prioridad: 1 = se revisa todos los dias; 2 = rota con los demas.
@@ -38,11 +46,12 @@ destinos:
 # Fechas fijas que se revisan SIEMPRE (para comparar el mismo viaje dia a dia
 # y detectar rebajas falsas). Formato: [salida, regreso].
 seguimiento_fijo:
-  FLN: [["2027-03-06", "2027-03-14"], ["2027-03-13", "2027-03-21"], ["2027-04-10", "2027-04-18"]]
+  # 6-12 mar = mismas fechas del paquete Falabella (para comparar)
+  FLN: [["2027-03-06", "2027-03-12"], ["2027-03-06", "2027-03-14"], ["2027-03-13", "2027-03-21"], ["2027-04-10", "2027-04-18"]]
 
 # Presupuesto de busquedas SerpApi (plan gratis = 250 al mes)
 busquedas:
-  max_por_dia_normal: 5
+  max_por_dia_normal: 6
   max_por_dia_intensivo: 12
   reserva_minima: 15            # nunca bajar de esto (para verificar ofertas)
   dias_reuso_hotel: 3           # reusar busqueda de hotel si tiene menos de N dias
@@ -53,16 +62,17 @@ busquedas:
 # Calidad minima (si no cumple, no se recomienda)
 calidad_minima:
   hotel_nota_min_5: 4.2         # nota Google de 0 a 5 (equivale aprox. a 8,4/10)
-  hotel_estrellas_min: 4
+  hotel_estrellas_min: 3        # 3 estrellas solo si cumple la nota minima de arriba
   hotel_resenas_min: 100
   escala_max_horas: 4
   escalas_max: 1
 
 # Pesos del puntaje (suman 1.0). Sube el que te importe mas.
 pesos:
-  precio: 0.40
-  vuelo: 0.25
-  hotel: 0.25
+  precio: 0.30
+  vuelo: 0.20
+  hotel: 0.30
+  noches: 0.10
   oferta_real: 0.10
 
 # Alertas

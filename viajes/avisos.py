@@ -24,7 +24,7 @@ def texto_alerta(c, usd):
     desc = (f"📉 −{c['descuento_pct']:.0f}% vs precio base pre-Black Friday ({c['base_tipo']})\n"
             if c["descuento_pct"] and c["descuento_pct"] > 0 else "")
     return (
-        f"🔥 <b>OFERTA REAL · {html.escape(c['destino_nombre'])}</b>\n"
+        f"{'🎯 <b>EN TU RANGO' if c.get('en_rango') else '🔥 <b>OFERTA REAL'} · {html.escape(c['destino_nombre'])}</b>\n"
         f"📅 {fecha(c['salida'])} → {fecha(c['regreso'])} 2027 ({c['noches']} noches)\n"
         f"💰 <b>{clp(c['total_clp'])} CLP</b> para 2{usd_txt} · {clp(c['total_clp'] / 2)} por persona\n{desc}"
         f"✈️ {html.escape(v['aerolinea'])} {escalas} · {html.escape(v['equipaje'])}\n"

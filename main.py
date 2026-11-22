@@ -166,7 +166,8 @@ def main():
             zona = d["zonas"][n_prev % len(d["zonas"])]
             try:
                 filas = fuentes.buscar_hoteles(serp, dest, zona, sal, reg, cfg["viaje"]["adultos"],
-                                               cfg["calidad_minima"]["hotel_estrellas_min"])
+                                               cfg["calidad_minima"]["hotel_estrellas_min"],
+                                               mas_baratos=(n_prev // len(d["zonas"])) % 2 == 0)
                 for f in filas:
                     con.execute(f"INSERT INTO hoteles({','.join(f)}) VALUES({','.join('?' * len(f))})",
                                 list(f.values()))
@@ -193,8 +194,8 @@ def main():
     # ------------------------------------------------ alertas (solo verificadas)
     envios = []
     if not a.seco and not a.sin_avisos:
-        for c in [c for c in cands if c["recomendacion"] == "COMPRAR"
-                  and c["puntaje"] >= cfg["alertas"]["puntaje_min"]][:2]:
+        for c in [c for c in cands if c["calidad_ok"] and (c["en_rango"] or (
+                  c["recomendacion"] == "COMPRAR" and c["puntaje"] >= cfg["alertas"]["puntaje_min"]))][:2]:
             clave = f"{c['destino']}|{c['salida']}|{c['regreso']}|{c['hotel']['nombre']}"
             prev = con.execute("SELECT precio_clp FROM alertas WHERE clave=?", (clave,)).fetchone()
             extra = cfg["alertas"]["rebaja_extra_para_repetir_pct"] / 100
@@ -252,7 +253,22 @@ def main():
             h = analisis.historial_vuelo(con, dest, s, r)
             if h:
                 seguimiento[f"{dest} {s}→{r}"] = list(h.items())
+    paquetes = []
+    archivo_paq = RAIZ / "paquetes.yaml"
+    if archivo_paq.exists():
+        for p in yaml.safe_load(archivo_paq.read_text(encoding="utf-8")) or []:
+            p = {k: str(v) if isinstance(v, (dt.date, dt.datetime)) else v for k, v in p.items()}
+            vuelo = con.execute(
+                "SELECT MIN(precio_clp) FROM vuelos WHERE destino=? AND salida=? AND regreso=? AND escalas=0",
+                (p["destino"], p["salida"], p["regreso"])).fetchone()[0]
+            p["vuelo_directo_solo_2_clp"] = vuelo
+            p["hotel_implicito_2_clp"] = p["total_2_clp"] - vuelo if vuelo else None
+            p["noches"] = (dt.date.fromisoformat(p["regreso"]) - dt.date.fromisoformat(p["salida"])).days
+            p["destino_nombre"] = destinos.get(p["destino"], {}).get("nombre", p["destino"])
+            paquetes.append(p)
     datos = {
+        "paquetes_manuales": paquetes,
+        "objetivo": cfg.get("objetivo"),
         "generado": ahora.isoformat(timespec="seconds"), "generado_chile": cl.strftime("%d-%m-%Y %H:%M"),
         "estado": estado, "usd_clp": usd, "usd_fecha": usd_fecha, "usd_fuente": usd_fuente,
         "busquedas_restantes_cuenta": restantes_cuenta,

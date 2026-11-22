@@ -1,0 +1,37 @@
+# Paquetes vistos a mano (los sitios de paquetes no permiten extraccion automatica).
+# Agrega uno nuevo copiando un bloque. Precios TOTALES para 2 personas.
+# El panel los compara con vuelo + hotel por separado en las mismas fechas.
+
+- fecha_consulta: "2026-11-22"
+  fuente: "Viajes Falabella (captura del usuario)"
+  destino: FLN
+  salida: "2027-03-06"
+  regreso: "2027-03-12"
+  hotel: "Barra Beach Hotel"
+  estrellas: 3
+  nota_10: null            # no visible en la captura
+  zona: "Barra da Lagoa (a 12,8 km del centro)"
+  desayuno: "sí (buffet)"
+  vuelo: "directo SCL-FLN, aerolínea no visible"
+  equipaje: "parece solo artículo personal"
+  total_2_clp: 807010
+  precio_anterior_2_clp: 909692   # 454.846 x 2 segun el sitio (no verificable)
+  incluye_tasas: true
+
+- fecha_consulta: "2026-11-22"
+  fuente: "Viajes Falabella (captura del usuario)"
+  destino: FLN
+  salida: "2027-03-06"
+  regreso: "2027-03-12"
+  hotel: "HANNA San Diego Hotel"
+  estrellas: 3
+  nota_10: 8.4
+  resenas: 808
+  zona: "Canasvieiras"
+  desayuno: "sí (buffet)"
+  vuelo: "directo SCL-FLN, aerolínea no visible"
+  equipaje: "parece solo artículo personal"
+  cancelacion: "reserva flexible"
+  total_2_clp: 1016796
+  precio_anterior_2_clp: 1158958  # 579.479 x 2 segun el sitio (no verificable)
+  incluye_tasas: true

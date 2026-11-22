@@ -31,7 +31,7 @@ def puntaje_vuelo(f, cfg):
 
 def puntaje_hotel(h):
     s = _clip(((h["nota"] or 0) - 3.8) / 1.2, 0, 1) * 60
-    s += {5: 20, 4: 12}.get(h["estrellas"] or 0, 0)
+    s += {5: 20, 4: 12, 3: 5}.get(h["estrellas"] or 0, 0)
     s += min(1, math.log10(max(h["resenas"] or 1, 1)) / 3.5) * 10
     s += 10 if h["desayuno"] == "sí" else 0
     return round(_clip(s), 1)
@@ -148,6 +148,9 @@ def candidatos(con, cfg, ahora):
                 inflado=posible_inflado(hist_v, bf), calidad_ok=ok, motivos_calidad=motivos,
                 antes_bf=hoy < bf))
     _puntuar(salida, cfg)
+    obj = cfg.get("objetivo") or {}
+    if obj.get("priorizar_rango"):
+        return sorted(salida, key=lambda x: (not x["en_rango"], -x["puntaje"]))
     return sorted(salida, key=lambda x: -x["puntaje"])
 
 
@@ -155,13 +158,20 @@ def _puntuar(cands, cfg):
     if not cands:
         return
     w = cfg["pesos"]
+    v = cfg["viaje"]
+    obj = cfg.get("objetivo") or {}
     pmin = min(c["total_clp"] for c in cands)
     pmax = max(c["total_clp"] for c in cands)
     for c in cands:
+        c["por_persona_clp"] = c["total_clp"] / v["adultos"]
+        c["en_rango"] = bool(obj) and obj["por_persona_min"] <= c["por_persona_clp"] <= obj["por_persona_max"]
         p_precio = 100 * (pmax - c["total_clp"]) / (pmax - pmin) if pmax > pmin else 50
         p_oferta = _clip((c["descuento_pct"] or 0) * 100 / 30)
+        rango_n = max(v["noches_max"] - v["noches_min"], 1)
+        p_noches = _clip((c["noches"] - v["noches_min"]) * 100 / rango_n)
         c["puntaje"] = round(w["precio"] * p_precio + w["vuelo"] * c["vuelo"]["puntaje"]
-                             + w["hotel"] * c["hotel"]["puntaje"] + w["oferta_real"] * p_oferta, 1)
+                             + w["hotel"] * c["hotel"]["puntaje"] + w.get("noches", 0) * p_noches
+                             + w["oferta_real"] * p_oferta, 1)
         if not c["calidad_ok"]:
             c["puntaje"] = round(c["puntaje"] * 0.6, 1)
         c["recomendacion"], c["razon"] = recomendar(c, cfg)

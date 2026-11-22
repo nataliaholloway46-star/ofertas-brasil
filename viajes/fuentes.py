@@ -119,13 +119,16 @@ def verificar_vuelo(serp, origen, llegada, salida, regreso, adultos, departure_t
 
 
 # ---------------------------------------------------------------- hoteles
-def buscar_hoteles(serp, destino, zona, salida, regreso, adultos, estrellas_min):
+def buscar_hoteles(serp, destino, zona, salida, regreso, adultos, estrellas_min, mas_baratos=False):
     clases = ",".join(str(c) for c in range(estrellas_min, 6))
-    d = serp.buscar({
+    params = {
         "engine": "google_hotels", "q": f"hotels in {zona}, Brazil",
         "check_in_date": salida, "check_out_date": regreso, "adults": adultos,
         "currency": "CLP", "hl": "en", "gl": "cl", "hotel_class": clases, "rating": "8",
-    })
+    }
+    if mas_baratos:
+        params["sort_by"] = "3"  # precio mas bajo primero (con filtro de nota)
+    d = serp.buscar(params)
     ts = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
     link_busqueda = d.get("search_metadata", {}).get("google_hotels_url")
     filas = []
