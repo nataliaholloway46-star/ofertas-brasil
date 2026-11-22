@@ -79,10 +79,10 @@ svg text{fill:var(--muted);font-size:11px}
 <div id="paqNota" class="note" hidden>📦 <b>Paquetes:</b> Despegar, Cocha, Falabella y Atrápalo no tienen API y sus términos prohíben la extracción automática. Para comparar, abre el enlace "Paquete" de cada tarjeta con las mismas fechas: si el paquete cuesta menos que el total separado que ves aquí, conviene el paquete.</div>
 
 <section id="hero"></section>
-<h3>📦 Paquetes (opción preferida)</h3>
+<h3>📦 Paquetes reales (desde correos de ofertas de agencias)</h3>
 <div id="paquetes"></div>
 
-<h3>✈️🏨 Vuelo + hotel por separado</h3>
+<h3>✈️🏨 Paquete armado (vuelo + hotel, en tiempo real)</h3>
 <div class="sub" id="refTxt" style="margin-bottom:10px"></div>
 <div class="grid" id="cards"></div>
 
@@ -117,17 +117,15 @@ function filtrados(){
   return L.sort(ord[f.orden]);
 }
 function paquetesHTML(){
-  const P=D.paquetes_manuales||[];
-  if(!P.length)return '<div class="empty">Sin paquetes registrados. Mándale a Claude una captura del detalle y lo agrega.</div>';
-  return '<div class="grid">'+P.map(p=>{
-    const imp=p.hotel_implicito_2_clp;
-    return `<article class="card"><div class="rank">📦 ${esc(p.fuente)} · visto ${esc(p.fecha_consulta)}</div>
-    <p class="dest">${esc(p.destino_nombre)} · ${fch(p.salida)} → ${fch(p.regreso)} · ${p.noches} noches</p>
-    <div><span class="price">${clp(p.total_2_clp)}</span>${p.precio_anterior_2_clp?`<span class="old">${clp(p.precio_anterior_2_clp)}</span>`:''} <span class="sub">para 2 · ${clp(p.total_2_clp/2)} por persona</span></div>
-    <div class="row"><span class="chip">🏨 ${p.estrellas}★ ${esc(p.hotel)}</span>${p.nota_10?`<span class="chip">⭐ ${p.nota_10}/10 (${p.resenas||'?'})</span>`:'<span class="chip no">nota no visible</span>'}<span class="chip">📍 ${esc(p.zona)}</span><span class="chip">🍳 ${esc(p.desayuno)}</span></div>
-    <div class="row"><span class="chip">✈️ ${esc(p.vuelo)}</span><span class="chip no">🧳 ${esc(p.equipaje)}</span></div>
-    <div class="why">${p.vuelo_directo_solo_2_clp?`Vuelo directo solo, mismas fechas (Google Flights): <b>${clp(p.vuelo_directo_solo_2_clp)}</b> para 2 → el hotel te sale en ~<b>${clp(imp)}</b> por ${p.noches} noches dentro del paquete.`:'Aún no hay vuelo buscado para estas mismas fechas: se buscará en la próxima corrida.'}</div>
-    <div class="src">Dato ingresado a mano desde captura; el "precio anterior" lo define el sitio y no es verificable.</div></article>`}).join('')+'</div>';
+  const dsel=$('fDest').value;
+  const P=(D.paquetes_correo||[]).filter(p=>!dsel||p.destino===dsel);
+  if(!P.length)return `<div class="empty">Aún no llegan correos con paquetes${dsel?' a este destino':''} en los últimos ${D.dias_vigencia_correo||7} días.<br>Estado Gmail: ${esc(D.estado.gmail||'sin leer')}</div>`;
+  return '<div class="grid">'+P.slice(0,12).map(p=>`<article class="card"><div class="rank">📦 ${esc(p.agencia)} · correo del ${esc(p.fecha)}</div>
+    <p class="dest">${esc(p.destino_nombre)}${p.noches?` · ${p.noches} noches`:''}</p>
+    <div><span class="price">${p.desde?'<span class="sub">desde </span>':''}${clp(p.por_persona_clp)}</span> <span class="sub">por persona${p.base_precio==='no indicado'?' (supuesto)':''}${p.base_precio==='total'?' (correo indicaba total '+clp(p.precio_clp)+')':''}</span>${usd(p.por_persona_clp)}</div>
+    <div class="row">${D.objetivo&&p.por_persona_clp<=D.objetivo.por_persona_max?'<span class="chip ok">🎯 En tu rango</span>':''}<span class="chip">✔ Precio real publicado por la agencia</span></div>
+    <div class="why">Revisa en el enlace las fechas disponibles, el hotel y el equipaje: los correos suelen mostrar el precio más bajo del período.</div>
+    ${p.link?`<div class="btns"><a class="btn" target="_blank" rel="noopener" href="${esc(p.link)}">Ver paquete</a></div>`:''}</article>`).join('')+'</div>';
 }
 function usd(x){return D.usd_clp?` <span class="sub">≈ US$${Math.round(x/D.usd_clp).toLocaleString('es-CL')}</span>`:''}
 function desc(c){
@@ -151,29 +149,29 @@ function card(c,i){
   <div class="row"><span class="chip">✈️ ${esc(v.aerolinea)} ${esc_} · ${Math.floor(v.duracion_min/60)}h${String(v.duracion_min%60).padStart(2,'0')}</span><span class="chip">🧳 ${esc(v.equipaje)}</span>${v.hora_salida?`<span class="chip">🕘 sale ${esc(v.hora_salida)}</span>`:''}${v.retraso_frecuente?'<span class="chip no">⏱ suele atrasarse +30 min</span>':''}</div>
   <div class="row"><span class="chip">🏨 ${h.estrellas||'?'}★ ${esc(h.zona)}</span><span class="chip">⭐ ${h.nota??'?'}/5 (${(h.resenas||0).toLocaleString('es-CL')})</span><span class="chip">🍳 desayuno: ${esc(h.desayuno)}</span><span class="chip">↩️ cancelación: ${esc(h.cancelacion)}</span></div>
   <div class="sub">${esc(h.nombre)} · vuelo ${clp(v.precio_clp)} + hotel ${clp(h.precio_total_clp)}${c.nota_destino?' · '+esc(c.nota_destino):''}</div>
-  <div class="row">${D.referencia_paquete_pp?(c.iguala_paquete?'<span class="chip ok">📦 Iguala o mejora al mejor paquete</span>':`<span class="chip no">📦 ${clp(c.total_clp/2-D.referencia_paquete_pp)} por persona más caro que el mejor paquete</span>`):''}${verif(c)}</div>
+  <div class="row">${c.referencia_pp?(c.iguala_paquete?'<span class="chip ok">📦 Iguala o mejora la referencia de paquete</span>':`<span class="chip no">📦 ${clp(c.total_clp/2-c.referencia_pp)} por persona sobre la referencia (${clp(c.referencia_pp)})</span>`):''}${verif(c)}</div>
   <div class="why"><b>${c.recomendacion}</b>: ${esc(c.razon)}. ${esc(c.explicacion)}</div>
   <div class="btns"><a class="btn" target="_blank" rel="noopener" href="${esc(v.link)}">Vuelo</a><a class="btn btn2" target="_blank" rel="noopener" href="${esc(h.link)}">Hotel</a><a class="btn btn2" target="_blank" rel="noopener" href="${paquete(c)}">Paquete</a></div>
   <div class="src">Consultado ${esc(v.ts.slice(0,16).replace('T',' '))} UTC · ${esc(v.fuente)} / ${esc(h.fuente)}</div>
   </article>`;
 }
 function hero(c,L){
-  const P=(D.paquetes_manuales||[])[0];
+  const P=(D.paquetes_correo||[]).filter(p=>!$('fDest').value||p.destino===$('fDest').value)[0];
   const igual=(L||[]).find(x=>x.iguala_paquete&&x.calidad_ok);
   if(igual)c=igual;
   else if(L&&L.length)c=L.reduce((a,b)=>a.total_clp<=b.total_clp?a:b);
   if(P&&!(c&&c.iguala_paquete)){
     return `<div class="hero"><div><div class="sub">🏆 MEJOR OPCIÓN HOY: PAQUETE</div>
-    <h2>${esc(P.destino_nombre)} · ${fch(P.salida)} → ${fch(P.regreso)} 2027 (${P.noches} noches)</h2>
-    <div class="big">${clp(P.por_persona_clp)} <span class="sub">por persona · ${clp(P.total_2_clp)} para 2</span></div>
-    <div class="sub">${esc(P.hotel)} ${P.estrellas}★ · ${esc(P.zona)} · ${esc(P.vuelo)} · ${esc(P.fuente)}, visto ${esc(P.fecha_consulta)}</div></div>
-    <div class="verdict buy"><b>📦 PAQUETE</b><div class="sub">${c?`El mejor vuelo + hotel separado cuesta ${clp(c.total_clp/2-P.por_persona_clp)} más por persona.`:'Aún no hay vuelo + hotel separado para comparar.'} Te aviso si uno lo iguala.</div></div></div>`;
+    <h2>${esc(P.destino_nombre)}${P.noches?` · ${P.noches} noches`:''}</h2>
+    <div class="big">${P.desde?'desde ':''}${clp(P.por_persona_clp)} <span class="sub">por persona</span>${usd(P.por_persona_clp)}</div>
+    <div class="sub">${esc(P.agencia)} · correo del ${esc(P.fecha)} · precio real publicado por la agencia</div></div>
+    <div class="verdict buy"><b>📦 PAQUETE</b><div class="sub">${c?`El mejor vuelo + hotel armado cuesta ${clp(c.total_clp/2-P.por_persona_clp)} más por persona.`:'Aún no hay vuelo + hotel armado para comparar.'} ${P.link?`<a href="${esc(P.link)}" target="_blank" rel="noopener">Ver paquete</a>`:''}</div></div></div>`;
   }
   if(!c)return `<div class="panel empty">Aún no hay combinaciones vuelo + hotel con estos filtros.<br>La línea base se va llenando con cada búsqueda diaria.</div>`;
   const buy=c.recomendacion==='COMPRAR';
   const o=D.objetivo,rango=o?`${clp(o.por_persona_min)}–${clp(o.por_persona_max)}`:'';
   const tag=c.en_rango?`🎯 EN TU RANGO (${rango} por persona)`:(o?`⚠ Aún nada en tu rango de ${rango} por persona · mejor alternativa`:'');
-  return `<div class="hero"><div><div class="sub">🏆 MEJOR OPCIÓN SEGÚN FILTROS · ${tag}</div>
+  return `<div class="hero"><div><div class="sub">${P?'🏆 MEJOR OPCIÓN':'📦 AÚN SIN PAQUETES REALES · REFERENCIA: PAQUETE ARMADO'} · ${tag}</div>
   <h2>${esc(c.destino_nombre)} · ${fch(c.salida)} → ${fch(c.regreso)} 2027 (${c.noches} noches)</h2>
   <div class="big">${clp(c.total_clp)} CLP${usd(c.total_clp)}</div><div class="sub">para 2 personas · ${clp(c.total_clp/2)} por persona (vuelo ${clp(c.vuelo.precio_clp/2)} + hotel ${clp(c.hotel.precio_total_clp/2)})</div><div>${desc(c)}</div>
   <div class="sub">${esc(c.vuelo.aerolinea)} ${c.vuelo.escalas===0?'directo':c.vuelo.escalas+' escala(s)'} + ${esc(c.hotel.nombre)} ${c.hotel.estrellas}★ (⭐ ${c.hotel.nota}/5 · ${c.hotel.resenas} reseñas)</div></div>
@@ -202,7 +200,7 @@ function render(){
   $('hero').innerHTML=hero(L[0],L);
   $('cards').innerHTML=L.slice(0,5).map(card).join('')||'';
   $('paquetes').innerHTML=paquetesHTML();
-  $('refTxt').textContent=D.referencia_paquete_pp?`Solo te aviso por Telegram si una de estas opciones cuesta ${clp(D.referencia_paquete_pp)} por persona o menos (precio del mejor paquete registrado).`:'';
+  $('refTxt').textContent=`Referencia para saber si un paquete es bueno (precios reales de Google Flights + Google Hotels). Solo te aviso por Telegram si una opción iguala al paquete real más barato del mismo destino, o queda bajo ${D.objetivo?clp(D.objetivo.por_persona_max):'tu tope'} por persona si aún no hay paquetes.`;
   grafico();
 }
 fetch('data.json?'+Date.now()).then(r=>r.json()).then(d=>{

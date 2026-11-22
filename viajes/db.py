@@ -20,6 +20,9 @@ CREATE TABLE IF NOT EXISTS hoteles(
   id INTEGER PRIMARY KEY, ts TEXT, destino TEXT, salida TEXT, regreso TEXT, zona TEXT,
   nombre TEXT, estrellas INTEGER, nota REAL, resenas INTEGER, precio_total_clp REAL,
   desayuno TEXT, cancelacion TEXT, link TEXT, fuente TEXT, property_token TEXT);
+CREATE TABLE IF NOT EXISTS paquetes_correo(
+  msgid TEXT PRIMARY KEY, fecha TEXT, agencia TEXT, destino TEXT, precio_clp REAL,
+  base_precio TEXT, noches INTEGER, es_paquete INTEGER, desde INTEGER, link TEXT);
 CREATE TABLE IF NOT EXISTS alertas(clave TEXT PRIMARY KEY, ts TEXT, precio_clp REAL);
 CREATE TABLE IF NOT EXISTS eventos(tipo TEXT, fecha TEXT, PRIMARY KEY(tipo, fecha));
 """

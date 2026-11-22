@@ -18,7 +18,7 @@ from zoneinfo import ZoneInfo
 
 import yaml
 
-from viajes import analisis, avisos, db, fuentes
+from viajes import analisis, avisos, correo, db, fuentes
 
 RAIZ = pathlib.Path(__file__).resolve().parent
 CHILE = ZoneInfo("America/Santiago")
@@ -99,7 +99,10 @@ def main():
     ap.add_argument("--seco", action="store_true")
     ap.add_argument("--sin-avisos", action="store_true")
     ap.add_argument("--max", type=int)
+    ap.add_argument("--reporte", action="store_true", help="enviar resumen ahora (no gasta busquedas)")
     a = ap.parse_args()
+    if a.reporte:
+        a.max = 0
 
     cargar_env()
     cfg = yaml.safe_load((RAIZ / "config.yaml").read_text(encoding="utf-8"))
@@ -191,32 +194,50 @@ def main():
         c["verificado"] = False
     usd, usd_fecha, usd_fuente = fuentes.dolar_clp()
 
-    # ------------------------------------------------ alertas (solo verificadas)
-    # ------------------------------------------------ paquetes (referencia principal)
+    # ------------------------------------------------ paquetes REALES desde correos (opcion A)
+    cc = cfg.get("correos") or {}
+    if not a.seco:
+        ofertas, err = correo.leer_ofertas(cfg, dias=3)
+        estado["gmail"] = err or f"ok ({len(ofertas)} ofertas leídas)"
+        if err and err != "Gmail no configurado":
+            estado["errores"].append(err)
+        for o in ofertas:
+            con.execute(f"INSERT OR IGNORE INTO paquetes_correo({','.join(o)}) VALUES({','.join('?' * len(o))})",
+                        list(o.values()))
+        con.commit()
+    vig = (cl.date() - dt.timedelta(days=cc.get("dias_vigencia", 7))).isoformat()
     paquetes = []
-    archivo_paq = RAIZ / "paquetes.yaml"
-    if archivo_paq.exists():
-        for p in yaml.safe_load(archivo_paq.read_text(encoding="utf-8")) or []:
-            p = {k: str(v) if isinstance(v, (dt.date, dt.datetime)) else v for k, v in p.items()}
-            vuelo = con.execute(
-                "SELECT MIN(precio_clp) FROM vuelos WHERE destino=? AND salida=? AND regreso=? AND escalas=0",
-                (p["destino"], p["salida"], p["regreso"])).fetchone()[0]
-            p["vuelo_directo_solo_2_clp"] = vuelo
-            p["hotel_implicito_2_clp"] = p["total_2_clp"] - vuelo if vuelo else None
-            p["noches"] = (dt.date.fromisoformat(p["regreso"]) - dt.date.fromisoformat(p["salida"])).days
-            p["destino_nombre"] = destinos.get(p["destino"], {}).get("nombre", p["destino"])
-            p["por_persona_clp"] = p["total_2_clp"] / cfg["viaje"]["adultos"]
-            paquetes.append(p)
+    for r in con.execute("SELECT * FROM paquetes_correo WHERE fecha>=? AND es_paquete=1", (vig,)):
+        p = dict(r)
+        p["destino_nombre"] = destinos.get(p["destino"], {}).get("nombre", p["destino"])
+        # Si el correo no dice "por persona" ni "total", se asume por persona (costumbre en Chile)
+        p["por_persona_clp"] = p["precio_clp"] / cfg["viaje"]["adultos"] if p["base_precio"] == "total" \
+            else p["precio_clp"]
+        paquetes.append(p)
     paquetes.sort(key=lambda p: p["por_persona_clp"])
-    # Precio por persona que un vuelo+hotel separado debe igualar para avisarte:
-    # el paquete mas barato registrado (o el tope del objetivo si no hay paquetes).
+    # Un vuelo+hotel separado (opcion B) solo "iguala" si cuesta lo mismo o menos que el
+    # paquete real mas barato del MISMO destino. Sin paquete real -> tope del objetivo.
     obj = cfg.get("objetivo") or {}
+    ref_dest = {}
+    for p in paquetes:
+        ref_dest.setdefault(p["destino"], p["por_persona_clp"])
     ref_pp = paquetes[0]["por_persona_clp"] if paquetes else obj.get("por_persona_max")
     for c in cands:
-        c["iguala_paquete"] = bool(ref_pp) and c["por_persona_clp"] <= ref_pp
+        ref_c = ref_dest.get(c["destino"], obj.get("por_persona_max"))
+        c["referencia_pp"] = ref_c
+        c["iguala_paquete"] = bool(ref_c) and c["por_persona_clp"] <= ref_c
 
     envios = []
     if not a.seco and not a.sin_avisos:
+        # Paquetes reales de correo dentro del precio objetivo (sin repetir)
+        tope_paq = cc.get("alerta_por_persona_max", obj.get("por_persona_max"))
+        for p in [p for p in paquetes if tope_paq and p["por_persona_clp"] <= tope_paq][:3]:
+            clave = "correo|" + p["msgid"]
+            if con.execute("SELECT 1 FROM alertas WHERE clave=?", (clave,)).fetchone():
+                continue
+            envios.append(avisos.enviar(f"Paquete {p['destino_nombre']}", avisos.texto_paquete(p, usd)))
+            con.execute("INSERT OR REPLACE INTO alertas VALUES(?,?,?)", (clave, ahora.isoformat(), p["precio_clp"]))
+            con.commit()
         # Solo vuelo + hotel que iguale al mejor paquete y cumpla calidad (nunca solo vuelos)
         for c in [c for c in cands if c["calidad_ok"] and c["iguala_paquete"]][:2]:
             clave = f"{c['destino']}|{c['salida']}|{c['regreso']}|{c['hotel']['nombre']}"
@@ -246,17 +267,21 @@ def main():
 
         # resumen diario
         hecho = con.execute("SELECT 1 FROM eventos WHERE tipo='resumen' AND fecha=?", (hoy,)).fetchone()
-        if cl.hour >= cfg["alertas"]["hora_resumen_chile"] and not hecho:
+        if (cl.hour >= cfg["alertas"]["hora_resumen_chile"] and not hecho) or a.reporte:
             lineas = [f"☀️ <b>Resumen {cl:%d-%m}</b> · {estado['busquedas_usadas']} búsquedas · "
                       f"{len(estado['errores'])} errores"]
             if paquetes:
                 p = paquetes[0]
-                lineas.append(f"📦 Mejor paquete registrado: {avisos.clp(p['por_persona_clp'])} por persona · "
-                              f"{p['noches']} noches · {p['hotel']} {p['estrellas']}★ ({p['fuente']})")
+                lineas.append(f"📦 Mejor paquete real (correo {p['agencia']}, {p['fecha']}): "
+                              f"{p['destino_nombre']} {avisos.clp(p['por_persona_clp'])} por persona"
+                              f"{' · ' + str(p['noches']) + ' noches' if p['noches'] else ''}"
+                              f"{' (precio desde)' if p['desde'] else ''}")
+            else:
+                lineas.append("📦 Sin paquetes nuevos en tus correos de ofertas.")
             buenos = [c for c in cands if c["calidad_ok"]]
             if buenos:
                 c = min(buenos, key=lambda x: x["por_persona_clp"])
-                dif = c["por_persona_clp"] - ref_pp if ref_pp else 0
+                dif = c["por_persona_clp"] - (c["referencia_pp"] or 0)
                 estado_txt = "✅ iguala o mejora al paquete" if c["iguala_paquete"] else \
                     f"❌ {avisos.clp(dif)} por persona sobre el paquete"
                 lineas.append(f"🏨✈️ Mejor vuelo + hotel separado: {avisos.clp(c['por_persona_clp'])} por persona · "
@@ -282,8 +307,8 @@ def main():
             if h:
                 seguimiento[f"{dest} {s}→{r}"] = list(h.items())
     datos = {
-        "paquetes_manuales": paquetes,
-        "referencia_paquete_pp": ref_pp,
+        "paquetes_correo": paquetes,
+        "dias_vigencia_correo": cc.get("dias_vigencia", 7),
         "objetivo": cfg.get("objetivo"),
         "generado": ahora.isoformat(timespec="seconds"), "generado_chile": cl.strftime("%d-%m-%Y %H:%M"),
         "estado": estado, "usd_clp": usd, "usd_fecha": usd_fecha, "usd_fuente": usd_fuente,

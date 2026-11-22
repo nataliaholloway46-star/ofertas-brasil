@@ -35,6 +35,18 @@ def texto_alerta(c, usd):
         f"<a href=\"{html.escape(h['link'] or '')}\">Hotel</a>")
 
 
+def texto_paquete(p, usd):
+    usd_txt = f" (≈ US{clp(p['por_persona_clp'] / usd)})" if usd else ""
+    return (
+        f"📦 <b>PAQUETE · {html.escape(p['destino_nombre'])}</b>\n"
+        f"💰 <b>{'desde ' if p['desde'] else ''}{clp(p['por_persona_clp'])} por persona</b>{usd_txt}"
+        f"{' (supuesto: el correo no dice si es por persona)' if p['base_precio'] == 'no indicado' else ''}\n"
+        f"{'🌙 ' + str(p['noches']) + ' noches' + chr(10) if p['noches'] else ''}"
+        f"🏢 {html.escape(p['agencia'])} · correo del {p['fecha']}\n"
+        f"⚠️ Precio publicado por la agencia: revisa fechas, hotel y equipaje antes de comprar\n"
+        f"🔗 <a href=\"{html.escape(p['link'] or '')}\">Ver paquete</a>")
+
+
 def telegram(texto):
     token, chat = os.environ.get("TELEGRAM_BOT_TOKEN"), os.environ.get("TELEGRAM_CHAT_ID")
     if not token or not chat:

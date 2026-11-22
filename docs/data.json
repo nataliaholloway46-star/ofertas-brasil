@@ -1,60 +1,13 @@
 {
- "paquetes_manuales": [
-  {
-   "fecha_consulta": "2026-11-22",
-   "fuente": "Viajes Falabella (captura del usuario)",
-   "destino": "FLN",
-   "salida": "2027-03-06",
-   "regreso": "2027-03-12",
-   "hotel": "Barra Beach Hotel",
-   "estrellas": 3,
-   "nota_10": null,
-   "zona": "Barra da Lagoa (a 12,8 km del centro)",
-   "desayuno": "sí (buffet)",
-   "vuelo": "directo SCL-FLN, aerolínea no visible",
-   "equipaje": "parece solo artículo personal",
-   "total_2_clp": 807010,
-   "precio_anterior_2_clp": 909692,
-   "incluye_tasas": true,
-   "vuelo_directo_solo_2_clp": 628966.0,
-   "hotel_implicito_2_clp": 178044.0,
-   "noches": 6,
-   "destino_nombre": "Florianópolis",
-   "por_persona_clp": 403505.0
-  },
-  {
-   "fecha_consulta": "2026-11-22",
-   "fuente": "Viajes Falabella (captura del usuario)",
-   "destino": "FLN",
-   "salida": "2027-03-06",
-   "regreso": "2027-03-12",
-   "hotel": "HANNA San Diego Hotel",
-   "estrellas": 3,
-   "nota_10": 8.4,
-   "resenas": 808,
-   "zona": "Canasvieiras",
-   "desayuno": "sí (buffet)",
-   "vuelo": "directo SCL-FLN, aerolínea no visible",
-   "equipaje": "parece solo artículo personal",
-   "cancelacion": "reserva flexible",
-   "total_2_clp": 1016796,
-   "precio_anterior_2_clp": 1158958,
-   "incluye_tasas": true,
-   "vuelo_directo_solo_2_clp": 628966.0,
-   "hotel_implicito_2_clp": 387830.0,
-   "noches": 6,
-   "destino_nombre": "Florianópolis",
-   "por_persona_clp": 508398.0
-  }
- ],
- "referencia_paquete_pp": 403505.0,
+ "paquetes_correo": [],
+ "dias_vigencia_correo": 7,
  "objetivo": {
   "por_persona_min": 350000,
   "por_persona_max": 450000,
   "priorizar_rango": true
  },
- "generado": "2026-11-22T03:57:27+00:00",
- "generado_chile": "22-11-2026 00:57",
+ "generado": "2026-11-22T04:15:16+00:00",
+ "generado_chile": "22-11-2026 01:15",
  "estado": {
   "errores": [],
   "busquedas_usadas": 0,
@@ -183,6 +136,7 @@
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.8/5 en Jurerê Internacional (80/100), 11% sobre base.",
    "verificado": false,
+   "referencia_pp": 450000,
    "iguala_paquete": false
   },
   {
@@ -254,6 +208,7 @@
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.7/5 en Jurerê Internacional (73/100), 12% sobre base.",
    "verificado": false,
+   "referencia_pp": 450000,
    "iguala_paquete": false
   },
   {
@@ -325,6 +280,7 @@
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.8/5 en Jurerê Internacional (79/100), 10% sobre base.",
    "verificado": false,
+   "referencia_pp": 450000,
    "iguala_paquete": false
   },
   {
@@ -396,6 +352,7 @@
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.6/5 en Jurerê Internacional (69/100), 11% sobre base.",
    "verificado": false,
+   "referencia_pp": 450000,
    "iguala_paquete": false
   },
   {
@@ -467,6 +424,7 @@
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.4/5 en Jurerê Internacional (60/100), 13% sobre base.",
    "verificado": false,
+   "referencia_pp": 450000,
    "iguala_paquete": false
   },
   {
@@ -538,6 +496,7 @@
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.4/5 en Jurerê Internacional (59/100), 10% sobre base.",
    "verificado": false,
+   "referencia_pp": 450000,
    "iguala_paquete": false
   },
   {
@@ -609,6 +568,7 @@
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.8/5 en Jurerê Internacional (80/100), 6% sobre base.",
    "verificado": false,
+   "referencia_pp": 450000,
    "iguala_paquete": false
   },
   {
@@ -680,6 +640,7 @@
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.6/5 en Jurerê Internacional (72/100), 6% sobre base.",
    "verificado": false,
+   "referencia_pp": 450000,
    "iguala_paquete": false
   },
   {
@@ -751,6 +712,7 @@
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.7/5 en Lagoa da Conceição (82/100), 4% sobre base.",
    "verificado": false,
+   "referencia_pp": 450000,
    "iguala_paquete": false
   },
   {
@@ -824,6 +786,7 @@
    "razon": "No cumple calidad mínima: pocas reseñas (38)",
    "explicacion": "Vuelo directo (96/100), hotel 5.0/5 en Jurerê Internacional (76/100), 14% sobre base.",
    "verificado": false,
+   "referencia_pp": 450000,
    "iguala_paquete": false
   },
   {
@@ -895,6 +858,7 @@
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.6/5 en Jurerê Internacional (72/100), 4% sobre base.",
    "verificado": false,
+   "referencia_pp": 450000,
    "iguala_paquete": false
   },
   {
@@ -968,6 +932,7 @@
    "razon": "No cumple calidad mínima: pocas reseñas (71)",
    "explicacion": "Vuelo directo (96/100), hotel 5.0/5 en Lagoa da Conceição (87/100), 5% sobre base.",
    "verificado": false,
+   "referencia_pp": 450000,
    "iguala_paquete": false
   }
  ],

@@ -25,13 +25,14 @@ objetivo:
 # zonas: barrios recomendados para buscar hotel (se rotan).
 destinos:
   - {id: FLN, nombre: "Florianópolis", pais: Brasil, aeropuertos: "FLN", activo: true, prioridad: 1,
-     zonas: ["Jurerê Internacional", "Lagoa da Conceição", "Ingleses"]}
+     zonas: ["Jurerê Internacional", "Lagoa da Conceição", "Ingleses"],
+     palabras_correo: ["Florianópolis", "Floripa"]}
   - {id: RIO, nombre: "Río de Janeiro", pais: Brasil, aeropuertos: "GIG,SDU", activo: true, prioridad: 2,
      zonas: ["Ipanema", "Leblon", "Copacabana"]}
   - {id: BUZ, nombre: "Búzios", pais: Brasil, aeropuertos: "GIG,CFB", activo: true, prioridad: 2,
      zonas: ["Geribá, Búzios", "Centro, Armação dos Búzios"], nota: "Desde GIG son ~2h30 de traslado"}
   - {id: SSA, nombre: "Salvador de Bahía", pais: Brasil, aeropuertos: "SSA", activo: true, prioridad: 2,
-     zonas: ["Barra, Salvador", "Rio Vermelho, Salvador"]}
+     zonas: ["Barra, Salvador", "Rio Vermelho, Salvador"], palabras_correo: ["Salvador de Bah", "Salvador"]}
   - {id: MCZ, nombre: "Maceió", pais: Brasil, aeropuertos: "MCZ", activo: true, prioridad: 2,
      zonas: ["Pajuçara, Maceió", "Ponta Verde, Maceió"]}
   - {id: PDG, nombre: "Porto de Galinhas", pais: Brasil, aeropuertos: "REC", activo: true, prioridad: 2,
@@ -41,7 +42,20 @@ destinos:
   - {id: FOR, nombre: "Fortaleza", pais: Brasil, aeropuertos: "FOR", activo: true, prioridad: 2,
      zonas: ["Meireles, Fortaleza", "Praia de Iracema, Fortaleza"]}
   - {id: IGU, nombre: "Foz do Iguaçu", pais: Brasil, aeropuertos: "IGU", activo: true, prioridad: 2,
-     zonas: ["Centro, Foz do Iguaçu", "Rodovia das Cataratas, Foz do Iguaçu"]}
+     zonas: ["Centro, Foz do Iguaçu", "Rodovia das Cataratas, Foz do Iguaçu"],
+     palabras_correo: ["Foz do Igua", "Foz de Igua"]}
+
+# Paquetes reales desde correos de ofertas en tu Gmail (requiere GMAIL_USER y
+# GMAIL_APP_PASSWORD). Clave = texto que aparece en el remitente; valor = nombre.
+correos:
+  agencias:
+    viajesfalabella: "Viajes Falabella"
+    despegar: "Despegar"
+    cocha: "Cocha"
+    atrapalo: "Atrápalo"
+    latam: "LATAM"
+  dias_vigencia: 7          # una oferta de correo se considera vigente N dias
+  alerta_por_persona_max: 450000   # avisar paquetes de correo a este precio o menos
 
 # Fechas fijas que se revisan SIEMPRE (para comparar el mismo viaje dia a dia
 # y detectar rebajas falsas). Formato: [salida, regreso].
