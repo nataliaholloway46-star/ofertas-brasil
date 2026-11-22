@@ -72,6 +72,13 @@ alertas:
   hora_resumen_chile: 9         # resumen diario a esta hora (Chile)
   rebaja_extra_para_repetir_pct: 3   # no repetir alerta salvo que baje 3% mas
 
+# Aerolinea preferida.
+#   modo "priorizar": si hay vuelo LATAM se usa ese; si no hay, se usa otra.
+#   modo "solo": solo se consideran vuelos LATAM.
+#   modo "no": sin preferencia (gana el mejor precio-calidad).
+aerolineas_preferidas: ["LATAM"]
+modo_aerolinea: priorizar
+
 # Reputacion de aerolineas (0-100), editable. Fuente: tu criterio + datos de
 # atrasos que entrega Google Flights ("often delayed") en cada vuelo.
 aerolineas:

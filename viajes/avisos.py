@@ -26,7 +26,7 @@ def texto_alerta(c, usd):
     return (
         f"🔥 <b>OFERTA REAL · {html.escape(c['destino_nombre'])}</b>\n"
         f"📅 {fecha(c['salida'])} → {fecha(c['regreso'])} 2027 ({c['noches']} noches)\n"
-        f"💰 <b>{clp(c['total_clp'])} CLP</b> para 2{usd_txt}\n{desc}"
+        f"💰 <b>{clp(c['total_clp'])} CLP</b> para 2{usd_txt} · {clp(c['total_clp'] / 2)} por persona\n{desc}"
         f"✈️ {html.escape(v['aerolinea'])} {escalas} · {html.escape(v['equipaje'])}\n"
         f"🏨 {html.escape(h['nombre'])} {h['estrellas']}★ · ⭐ {h['nota']}/5 ({h['resenas']} reseñas)\n"
         f"{'✔️ Verificado: ' + html.escape(c.get('verificacion', '')) if c.get('verificado') else '◐ No verificado'}\n"

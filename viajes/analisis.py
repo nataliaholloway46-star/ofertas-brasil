@@ -103,6 +103,14 @@ def candidatos(con, cfg, ahora):
         vuelos = [dict(r) for r in con.execute("SELECT * FROM vuelos WHERE destino=? AND salida=? "
                   "AND regreso=? AND ts=?", (c["destino"], c["salida"], c["regreso"], c["ts"]))]
         buenos = [v for v in vuelos if v["escalas"] <= cm["escalas_max"]] or vuelos
+        pref = cfg.get("aerolineas_preferidas") or []
+        modo = cfg.get("modo_aerolinea", "no")
+        if pref and modo != "no":
+            preferidos = [v for v in buenos if any(p in (v["aerolinea"] or "") for p in pref)]
+            if preferidos:
+                buenos = preferidos
+            elif modo == "solo":
+                continue
         for v in buenos:
             v["puntaje"] = puntaje_vuelo(v, cfg)
         # mejor vuelo = mejor equilibrio precio/calidad entre opciones de la misma busqueda

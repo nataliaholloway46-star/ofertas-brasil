@@ -119,7 +119,7 @@ function card(c,i){
   const esc_=v.escalas===0?'directo':`${v.escalas} escala(s)`;
   return `<article class="card">
   <div class="top"><div><div class="rank">#${i+1} · 🇧🇷 ${esc(c.destino_nombre)}</div><p class="dest">${fch(c.salida)} → ${fch(c.regreso)} · ${c.noches} noches</p></div><span class="score">${Math.round(c.puntaje)}</span></div>
-  <div><span class="price">${clp(c.total_clp)}</span>${base&&base>c.total_clp?`<span class="old">${clp(base)}</span>`:''} <span class="sub">para 2</span>${usd(c.total_clp)}</div>
+  <div><span class="price">${clp(c.total_clp)}</span>${base&&base>c.total_clp?`<span class="old">${clp(base)}</span>`:''} <span class="sub">para 2 · ${clp(c.total_clp/2)} por persona</span>${usd(c.total_clp)}</div>
   <div class="row"><span class="chip">✈️ ${esc(v.aerolinea)} ${esc_} · ${Math.floor(v.duracion_min/60)}h${String(v.duracion_min%60).padStart(2,'0')}</span><span class="chip">🧳 ${esc(v.equipaje)}</span>${v.hora_salida?`<span class="chip">🕘 sale ${esc(v.hora_salida)}</span>`:''}${v.retraso_frecuente?'<span class="chip no">⏱ suele atrasarse +30 min</span>':''}</div>
   <div class="row"><span class="chip">🏨 ${h.estrellas||'?'}★ ${esc(h.zona)}</span><span class="chip">⭐ ${h.nota??'?'}/5 (${(h.resenas||0).toLocaleString('es-CL')})</span><span class="chip">🍳 desayuno: ${esc(h.desayuno)}</span><span class="chip">↩️ cancelación: ${esc(h.cancelacion)}</span></div>
   <div class="sub">${esc(h.nombre)} · vuelo ${clp(v.precio_clp)} + hotel ${clp(h.precio_total_clp)}${c.nota_destino?' · '+esc(c.nota_destino):''}</div>
@@ -134,7 +134,7 @@ function hero(c){
   const buy=c.recomendacion==='COMPRAR';
   return `<div class="hero"><div><div class="sub">🏆 MEJOR OPCIÓN SEGÚN FILTROS</div>
   <h2>${esc(c.destino_nombre)} · ${fch(c.salida)} → ${fch(c.regreso)} 2027 (${c.noches} noches)</h2>
-  <div class="big">${clp(c.total_clp)} CLP${usd(c.total_clp)}</div><div>${desc(c)}</div>
+  <div class="big">${clp(c.total_clp)} CLP${usd(c.total_clp)}</div><div class="sub">para 2 personas · ${clp(c.total_clp/2)} por persona (vuelo ${clp(c.vuelo.precio_clp/2)} + hotel ${clp(c.hotel.precio_total_clp/2)})</div><div>${desc(c)}</div>
   <div class="sub">${esc(c.vuelo.aerolinea)} ${c.vuelo.escalas===0?'directo':c.vuelo.escalas+' escala(s)'} + ${esc(c.hotel.nombre)} ${c.hotel.estrellas}★ (⭐ ${c.hotel.nota}/5 · ${c.hotel.resenas} reseñas)</div></div>
   <div class="verdict ${buy?'buy':'wait'}"><b>${buy?'✅ COMPRAR':'⏳ ESPERAR'}</b><div class="sub">${esc(c.razon)}</div></div></div>`;
 }
