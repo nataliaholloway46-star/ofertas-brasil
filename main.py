@@ -192,10 +192,33 @@ def main():
     usd, usd_fecha, usd_fuente = fuentes.dolar_clp()
 
     # ------------------------------------------------ alertas (solo verificadas)
+    # ------------------------------------------------ paquetes (referencia principal)
+    paquetes = []
+    archivo_paq = RAIZ / "paquetes.yaml"
+    if archivo_paq.exists():
+        for p in yaml.safe_load(archivo_paq.read_text(encoding="utf-8")) or []:
+            p = {k: str(v) if isinstance(v, (dt.date, dt.datetime)) else v for k, v in p.items()}
+            vuelo = con.execute(
+                "SELECT MIN(precio_clp) FROM vuelos WHERE destino=? AND salida=? AND regreso=? AND escalas=0",
+                (p["destino"], p["salida"], p["regreso"])).fetchone()[0]
+            p["vuelo_directo_solo_2_clp"] = vuelo
+            p["hotel_implicito_2_clp"] = p["total_2_clp"] - vuelo if vuelo else None
+            p["noches"] = (dt.date.fromisoformat(p["regreso"]) - dt.date.fromisoformat(p["salida"])).days
+            p["destino_nombre"] = destinos.get(p["destino"], {}).get("nombre", p["destino"])
+            p["por_persona_clp"] = p["total_2_clp"] / cfg["viaje"]["adultos"]
+            paquetes.append(p)
+    paquetes.sort(key=lambda p: p["por_persona_clp"])
+    # Precio por persona que un vuelo+hotel separado debe igualar para avisarte:
+    # el paquete mas barato registrado (o el tope del objetivo si no hay paquetes).
+    obj = cfg.get("objetivo") or {}
+    ref_pp = paquetes[0]["por_persona_clp"] if paquetes else obj.get("por_persona_max")
+    for c in cands:
+        c["iguala_paquete"] = bool(ref_pp) and c["por_persona_clp"] <= ref_pp
+
     envios = []
     if not a.seco and not a.sin_avisos:
-        for c in [c for c in cands if c["calidad_ok"] and (c["en_rango"] or (
-                  c["recomendacion"] == "COMPRAR" and c["puntaje"] >= cfg["alertas"]["puntaje_min"]))][:2]:
+        # Solo vuelo + hotel que iguale al mejor paquete y cumpla calidad (nunca solo vuelos)
+        for c in [c for c in cands if c["calidad_ok"] and c["iguala_paquete"]][:2]:
             clave = f"{c['destino']}|{c['salida']}|{c['regreso']}|{c['hotel']['nombre']}"
             prev = con.execute("SELECT precio_clp FROM alertas WHERE clave=?", (clave,)).fetchone()
             extra = cfg["alertas"]["rebaja_extra_para_repetir_pct"] / 100
@@ -226,17 +249,22 @@ def main():
         if cl.hour >= cfg["alertas"]["hora_resumen_chile"] and not hecho:
             lineas = [f"☀️ <b>Resumen {cl:%d-%m}</b> · {estado['busquedas_usadas']} búsquedas · "
                       f"{len(estado['errores'])} errores"]
-            vistos = set()
-            for c in cands:
-                if c["destino"] in vistos:
-                    continue
-                vistos.add(c["destino"])
-                lineas.append(f"• {c['destino_nombre']}: {avisos.clp(c['total_clp'])} "
-                              f"({avisos.fecha(c['salida'])}–{avisos.fecha(c['regreso'])}) → {c['recomendacion']}")
-                if len(vistos) == 4:
-                    break
-            if len(lineas) == 1:
-                lineas.append("Aún sin combinaciones completas vuelo + hotel.")
+            if paquetes:
+                p = paquetes[0]
+                lineas.append(f"📦 Mejor paquete registrado: {avisos.clp(p['por_persona_clp'])} por persona · "
+                              f"{p['noches']} noches · {p['hotel']} {p['estrellas']}★ ({p['fuente']})")
+            buenos = [c for c in cands if c["calidad_ok"]]
+            if buenos:
+                c = min(buenos, key=lambda x: x["por_persona_clp"])
+                dif = c["por_persona_clp"] - ref_pp if ref_pp else 0
+                estado_txt = "✅ iguala o mejora al paquete" if c["iguala_paquete"] else \
+                    f"❌ {avisos.clp(dif)} por persona sobre el paquete"
+                lineas.append(f"🏨✈️ Mejor vuelo + hotel separado: {avisos.clp(c['por_persona_clp'])} por persona · "
+                              f"{c['noches']} noches · {c['vuelo']['aerolinea']} + {c['hotel']['nombre']} "
+                              f"{c['hotel']['estrellas']}★ → {estado_txt}")
+            else:
+                lineas.append("Aún sin combinaciones vuelo + hotel que cumplan calidad.")
+            lineas.append("👉 Recomendación: paquete, salvo que el separado lo iguale.")
             envios.append(avisos.enviar("Resumen viaje Brasil", "\n".join(lineas)))
             con.execute("INSERT OR IGNORE INTO eventos VALUES('resumen', ?)", (hoy,))
             con.commit()
@@ -253,21 +281,9 @@ def main():
             h = analisis.historial_vuelo(con, dest, s, r)
             if h:
                 seguimiento[f"{dest} {s}→{r}"] = list(h.items())
-    paquetes = []
-    archivo_paq = RAIZ / "paquetes.yaml"
-    if archivo_paq.exists():
-        for p in yaml.safe_load(archivo_paq.read_text(encoding="utf-8")) or []:
-            p = {k: str(v) if isinstance(v, (dt.date, dt.datetime)) else v for k, v in p.items()}
-            vuelo = con.execute(
-                "SELECT MIN(precio_clp) FROM vuelos WHERE destino=? AND salida=? AND regreso=? AND escalas=0",
-                (p["destino"], p["salida"], p["regreso"])).fetchone()[0]
-            p["vuelo_directo_solo_2_clp"] = vuelo
-            p["hotel_implicito_2_clp"] = p["total_2_clp"] - vuelo if vuelo else None
-            p["noches"] = (dt.date.fromisoformat(p["regreso"]) - dt.date.fromisoformat(p["salida"])).days
-            p["destino_nombre"] = destinos.get(p["destino"], {}).get("nombre", p["destino"])
-            paquetes.append(p)
     datos = {
         "paquetes_manuales": paquetes,
+        "referencia_paquete_pp": ref_pp,
         "objetivo": cfg.get("objetivo"),
         "generado": ahora.isoformat(timespec="seconds"), "generado_chile": cl.strftime("%d-%m-%Y %H:%M"),
         "estado": estado, "usd_clp": usd, "usd_fecha": usd_fecha, "usd_fuente": usd_fuente,

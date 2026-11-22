@@ -79,13 +79,14 @@ svg text{fill:var(--muted);font-size:11px}
 <div id="paqNota" class="note" hidden>📦 <b>Paquetes:</b> Despegar, Cocha, Falabella y Atrápalo no tienen API y sus términos prohíben la extracción automática. Para comparar, abre el enlace "Paquete" de cada tarjeta con las mismas fechas: si el paquete cuesta menos que el total separado que ves aquí, conviene el paquete.</div>
 
 <section id="hero"></section>
-<h3>Top 5 precio-calidad</h3>
-<div class="grid" id="cards"></div>
-
-<h3>📦 Paquetes vistos (comparación)</h3>
+<h3>📦 Paquetes (opción preferida)</h3>
 <div id="paquetes"></div>
 
-<h3>Evolución del precio del vuelo (2 personas)</h3>
+<h3>✈️🏨 Vuelo + hotel por separado</h3>
+<div class="sub" id="refTxt" style="margin-bottom:10px"></div>
+<div class="grid" id="cards"></div>
+
+<h3>Evolución del precio del vuelo (referencia para detectar rebajas falsas)</h3>
 <div class="panel"><div class="legend" id="legend"></div><div id="chart"></div>
 <div class="src">Línea punteada: inicio Black Friday. Incluye historial real de Google Flights para las fechas en seguimiento fijo.</div></div>
 
@@ -150,13 +151,24 @@ function card(c,i){
   <div class="row"><span class="chip">✈️ ${esc(v.aerolinea)} ${esc_} · ${Math.floor(v.duracion_min/60)}h${String(v.duracion_min%60).padStart(2,'0')}</span><span class="chip">🧳 ${esc(v.equipaje)}</span>${v.hora_salida?`<span class="chip">🕘 sale ${esc(v.hora_salida)}</span>`:''}${v.retraso_frecuente?'<span class="chip no">⏱ suele atrasarse +30 min</span>':''}</div>
   <div class="row"><span class="chip">🏨 ${h.estrellas||'?'}★ ${esc(h.zona)}</span><span class="chip">⭐ ${h.nota??'?'}/5 (${(h.resenas||0).toLocaleString('es-CL')})</span><span class="chip">🍳 desayuno: ${esc(h.desayuno)}</span><span class="chip">↩️ cancelación: ${esc(h.cancelacion)}</span></div>
   <div class="sub">${esc(h.nombre)} · vuelo ${clp(v.precio_clp)} + hotel ${clp(h.precio_total_clp)}${c.nota_destino?' · '+esc(c.nota_destino):''}</div>
-  <div class="row">${c.en_rango?'<span class="chip ok">🎯 En tu rango por persona</span>':''}${verif(c)}</div>
+  <div class="row">${D.referencia_paquete_pp?(c.iguala_paquete?'<span class="chip ok">📦 Iguala o mejora al mejor paquete</span>':`<span class="chip no">📦 ${clp(c.total_clp/2-D.referencia_paquete_pp)} por persona más caro que el mejor paquete</span>`):''}${verif(c)}</div>
   <div class="why"><b>${c.recomendacion}</b>: ${esc(c.razon)}. ${esc(c.explicacion)}</div>
   <div class="btns"><a class="btn" target="_blank" rel="noopener" href="${esc(v.link)}">Vuelo</a><a class="btn btn2" target="_blank" rel="noopener" href="${esc(h.link)}">Hotel</a><a class="btn btn2" target="_blank" rel="noopener" href="${paquete(c)}">Paquete</a></div>
   <div class="src">Consultado ${esc(v.ts.slice(0,16).replace('T',' '))} UTC · ${esc(v.fuente)} / ${esc(h.fuente)}</div>
   </article>`;
 }
-function hero(c){
+function hero(c,L){
+  const P=(D.paquetes_manuales||[])[0];
+  const igual=(L||[]).find(x=>x.iguala_paquete&&x.calidad_ok);
+  if(igual)c=igual;
+  else if(L&&L.length)c=L.reduce((a,b)=>a.total_clp<=b.total_clp?a:b);
+  if(P&&!(c&&c.iguala_paquete)){
+    return `<div class="hero"><div><div class="sub">🏆 MEJOR OPCIÓN HOY: PAQUETE</div>
+    <h2>${esc(P.destino_nombre)} · ${fch(P.salida)} → ${fch(P.regreso)} 2027 (${P.noches} noches)</h2>
+    <div class="big">${clp(P.por_persona_clp)} <span class="sub">por persona · ${clp(P.total_2_clp)} para 2</span></div>
+    <div class="sub">${esc(P.hotel)} ${P.estrellas}★ · ${esc(P.zona)} · ${esc(P.vuelo)} · ${esc(P.fuente)}, visto ${esc(P.fecha_consulta)}</div></div>
+    <div class="verdict buy"><b>📦 PAQUETE</b><div class="sub">${c?`El mejor vuelo + hotel separado cuesta ${clp(c.total_clp/2-P.por_persona_clp)} más por persona.`:'Aún no hay vuelo + hotel separado para comparar.'} Te aviso si uno lo iguala.</div></div></div>`;
+  }
   if(!c)return `<div class="panel empty">Aún no hay combinaciones vuelo + hotel con estos filtros.<br>La línea base se va llenando con cada búsqueda diaria.</div>`;
   const buy=c.recomendacion==='COMPRAR';
   const o=D.objetivo,rango=o?`${clp(o.por_persona_min)}–${clp(o.por_persona_max)}`:'';
@@ -187,9 +199,10 @@ function grafico(){
 function render(){
   $('paqNota').hidden=$('fCompra').value!=='paq';
   const L=filtrados();
-  $('hero').innerHTML=hero(L[0]);
+  $('hero').innerHTML=hero(L[0],L);
   $('cards').innerHTML=L.slice(0,5).map(card).join('')||'';
   $('paquetes').innerHTML=paquetesHTML();
+  $('refTxt').textContent=D.referencia_paquete_pp?`Solo te aviso por Telegram si una de estas opciones cuesta ${clp(D.referencia_paquete_pp)} por persona o menos (precio del mejor paquete registrado).`:'';
   grafico();
 }
 fetch('data.json?'+Date.now()).then(r=>r.json()).then(d=>{

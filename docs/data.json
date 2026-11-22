@@ -19,7 +19,8 @@
    "vuelo_directo_solo_2_clp": 628966.0,
    "hotel_implicito_2_clp": 178044.0,
    "noches": 6,
-   "destino_nombre": "Florianópolis"
+   "destino_nombre": "Florianópolis",
+   "por_persona_clp": 403505.0
   },
   {
    "fecha_consulta": "2026-11-22",
@@ -42,26 +43,28 @@
    "vuelo_directo_solo_2_clp": 628966.0,
    "hotel_implicito_2_clp": 387830.0,
    "noches": 6,
-   "destino_nombre": "Florianópolis"
+   "destino_nombre": "Florianópolis",
+   "por_persona_clp": 508398.0
   }
  ],
+ "referencia_paquete_pp": 403505.0,
  "objetivo": {
   "por_persona_min": 350000,
   "por_persona_max": 450000,
   "priorizar_rango": true
  },
- "generado": "2026-11-22T03:52:20+00:00",
- "generado_chile": "22-11-2026 00:52",
+ "generado": "2026-11-22T03:57:27+00:00",
+ "generado_chile": "22-11-2026 00:57",
  "estado": {
   "errores": [],
-  "busquedas_usadas": 1,
+  "busquedas_usadas": 0,
   "modo": "normal",
   "envios": []
  },
  "usd_clp": 1008.79,
  "usd_fecha": "2026-11-20",
  "usd_fuente": "mindicador.cl (dólar observado)",
- "busquedas_restantes_cuenta": 245,
+ "busquedas_restantes_cuenta": null,
  "inicio_black_friday": "2026-11-27",
  "destinos": [
   {
@@ -179,7 +182,8 @@
    "recomendacion": "ESPERAR",
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.8/5 en Jurerê Internacional (80/100), 11% sobre base.",
-   "verificado": false
+   "verificado": false,
+   "iguala_paquete": false
   },
   {
    "destino": "FLN",
@@ -249,7 +253,8 @@
    "recomendacion": "ESPERAR",
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.7/5 en Jurerê Internacional (73/100), 12% sobre base.",
-   "verificado": false
+   "verificado": false,
+   "iguala_paquete": false
   },
   {
    "destino": "FLN",
@@ -319,7 +324,8 @@
    "recomendacion": "ESPERAR",
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.8/5 en Jurerê Internacional (79/100), 10% sobre base.",
-   "verificado": false
+   "verificado": false,
+   "iguala_paquete": false
   },
   {
    "destino": "FLN",
@@ -389,7 +395,8 @@
    "recomendacion": "ESPERAR",
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.6/5 en Jurerê Internacional (69/100), 11% sobre base.",
-   "verificado": false
+   "verificado": false,
+   "iguala_paquete": false
   },
   {
    "destino": "FLN",
@@ -459,7 +466,8 @@
    "recomendacion": "ESPERAR",
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.4/5 en Jurerê Internacional (60/100), 13% sobre base.",
-   "verificado": false
+   "verificado": false,
+   "iguala_paquete": false
   },
   {
    "destino": "FLN",
@@ -529,7 +537,8 @@
    "recomendacion": "ESPERAR",
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.4/5 en Jurerê Internacional (59/100), 10% sobre base.",
-   "verificado": false
+   "verificado": false,
+   "iguala_paquete": false
   },
   {
    "destino": "FLN",
@@ -599,7 +608,8 @@
    "recomendacion": "ESPERAR",
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.8/5 en Jurerê Internacional (80/100), 6% sobre base.",
-   "verificado": false
+   "verificado": false,
+   "iguala_paquete": false
   },
   {
    "destino": "FLN",
@@ -669,7 +679,8 @@
    "recomendacion": "ESPERAR",
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.6/5 en Jurerê Internacional (72/100), 6% sobre base.",
-   "verificado": false
+   "verificado": false,
+   "iguala_paquete": false
   },
   {
    "destino": "FLN",
@@ -739,7 +750,8 @@
    "recomendacion": "ESPERAR",
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.7/5 en Lagoa da Conceição (82/100), 4% sobre base.",
-   "verificado": false
+   "verificado": false,
+   "iguala_paquete": false
   },
   {
    "destino": "FLN",
@@ -811,7 +823,8 @@
    "recomendacion": "ESPERAR",
    "razon": "No cumple calidad mínima: pocas reseñas (38)",
    "explicacion": "Vuelo directo (96/100), hotel 5.0/5 en Jurerê Internacional (76/100), 14% sobre base.",
-   "verificado": false
+   "verificado": false,
+   "iguala_paquete": false
   },
   {
    "destino": "FLN",
@@ -881,7 +894,8 @@
    "recomendacion": "ESPERAR",
    "razon": "Registrando línea base antes de Black Friday",
    "explicacion": "Vuelo directo (96/100), hotel 4.6/5 en Jurerê Internacional (72/100), 4% sobre base.",
-   "verificado": false
+   "verificado": false,
+   "iguala_paquete": false
   },
   {
    "destino": "FLN",
@@ -953,7 +967,8 @@
    "recomendacion": "ESPERAR",
    "razon": "No cumple calidad mínima: pocas reseñas (71)",
    "explicacion": "Vuelo directo (96/100), hotel 5.0/5 en Lagoa da Conceição (87/100), 5% sobre base.",
-   "verificado": false
+   "verificado": false,
+   "iguala_paquete": false
   }
  ],
  "series_destino": {
