@@ -1,16 +1,16 @@
 {
- "generado": "2026-11-22T03:09:35+00:00",
- "generado_chile": "22-11-2026 00:09",
+ "generado": "2026-11-22T03:25:27+00:00",
+ "generado_chile": "22-11-2026 00:25",
  "estado": {
   "errores": [],
-  "busquedas_usadas": 5,
+  "busquedas_usadas": 0,
   "modo": "normal",
   "envios": []
  },
  "usd_clp": 1008.79,
  "usd_fecha": "2026-11-20",
  "usd_fuente": "mindicador.cl (dólar observado)",
- "busquedas_restantes_cuenta": 250,
+ "busquedas_restantes_cuenta": 245,
  "inicio_black_friday": "2026-11-27",
  "destinos": [
   {
