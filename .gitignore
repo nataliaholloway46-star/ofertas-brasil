@@ -1,0 +1,6 @@
+# Claves secretas: NUNCA subir a GitHub
+.env
+__pycache__/
+*.pyc
+.venv/
+.claude/

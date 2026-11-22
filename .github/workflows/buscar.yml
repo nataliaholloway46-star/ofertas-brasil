@@ -1,0 +1,42 @@
+name: Buscar ofertas
+
+on:
+  schedule:
+    # Cada 3 horas. El programa decide si busca (1 vez al dia normal,
+    # varias veces en Black Friday/Cyber Monday) y manda el resumen ~9:00 Chile.
+    - cron: "5 */3 * * *"
+    - cron: "5 12 * * *"
+  workflow_dispatch:      # boton "Run workflow" para correrlo a mano
+
+permissions:
+  contents: write
+
+concurrency:
+  group: buscar
+  cancel-in-progress: false
+
+jobs:
+  buscar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Ejecutar busqueda
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python main.py
+      - name: Guardar historial y panel
+        run: |
+          git config user.name "bot-ofertas"
+          git config user.email "bot-ofertas@users.noreply.github.com"
+          git add datos/historial.db docs/data.json
+          git diff --cached --quiet || git commit -m "Precios $(date -u +'%Y-%m-%d %H:%M') UTC"
+          git push

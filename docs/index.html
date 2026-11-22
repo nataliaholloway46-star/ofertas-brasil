@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ofertas Brasil 2027</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--txt:#1b1e28;--muted:#667085;--line:#e4e7ec;--acc:#0e9f6e;--acc2:#2563eb;--warn:#d97706;--bad:#dc2626;--chip:#eef2ff}
+[data-theme=dark]{--bg:#0f1218;--card:#181c25;--txt:#eef0f5;--muted:#98a2b3;--line:#2a303c;--acc:#34d399;--acc2:#60a5fa;--warn:#fbbf24;--bad:#f87171;--chip:#232a3a}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--txt)}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+h1{font-size:22px;margin:0}
+.sub{color:var(--muted);font-size:13px}
+button.t{background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:18px}
+.filters label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+.filters select,.filters input{width:100%;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--txt);font-size:14px}
+.chk{display:flex;align-items:center;gap:6px;font-size:14px;padding-top:20px}
+.hero{background:linear-gradient(135deg,#0e9f6e22,#2563eb22);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:22px;display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.hero h2{margin:0 0 4px;font-size:20px}
+.big{font-size:34px;font-weight:800}
+.down{color:var(--acc);font-weight:700}.up{color:var(--bad);font-weight:700}
+.verdict{border-radius:14px;padding:16px;text-align:center;background:var(--card);border:2px solid var(--line)}
+.verdict b{font-size:24px;display:block}
+.buy{border-color:var(--acc)}.buy b{color:var(--acc)}.wait b{color:var(--warn)}
+h3{margin:26px 0 12px;font-size:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.top{display:flex;justify-content:space-between;align-items:flex-start}
+.rank{font-size:13px;color:var(--muted)}
+.score{background:var(--acc);color:#04130d;font-weight:800;border-radius:10px;padding:4px 10px;font-size:15px}
+.dest{font-size:19px;font-weight:700;margin:0}
+.price{font-size:24px;font-weight:800}
+.old{text-decoration:line-through;color:var(--muted);font-size:14px;margin-left:6px}
+.row{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--chip);border-radius:999px;padding:3px 10px;font-size:13px}
+.ok{color:var(--acc)}.no{color:var(--warn)}.bad{color:var(--bad)}
+.why{font-size:13px;color:var(--muted);border-left:3px solid var(--acc2);padding-left:8px}
+.btns{display:flex;gap:8px}
+.btn{flex:1;display:block;text-align:center;background:var(--acc2);color:#fff;text-decoration:none;padding:10px;border-radius:10px;font-weight:600;font-size:14px}
+.btn2{background:transparent;color:var(--acc2);border:1px solid var(--acc2)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+svg text{fill:var(--muted);font-size:11px}
+.legend{display:flex;gap:14px;font-size:13px;flex-wrap:wrap;margin-bottom:6px}
+.legend i{display:inline-block;width:12px;height:3px;margin-right:5px;vertical-align:middle}
+.src{font-size:12px;color:var(--muted)}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+.note{background:var(--chip);border-radius:12px;padding:12px;font-size:14px;margin-bottom:14px}
+@media(max-width:700px){.hero{grid-template-columns:1fr}.big{font-size:28px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div><h1>✈️🏝️ Ofertas Brasil · mar–abr 2027</h1>
+  <div class="sub" id="meta">Cargando…</div></div>
+  <button class="t" onclick="tema()">🌓 Modo</button>
+</header>
+
+<section class="filters">
+  <div><label>País</label><select id="fPais"><option>Brasil</option></select></div>
+  <div><label>Destino</label><select id="fDest"><option value="">Todos</option></select></div>
+  <div><label>Salida desde</label><input type="date" id="fDesde" value="2027-03-01"></div>
+  <div><label>Regreso hasta</label><input type="date" id="fHasta" value="2027-04-30"></div>
+  <div><label>Noches</label><select id="fNoches"><option value="">7 a 10</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div>
+  <div><label>Presupuesto máx. (CLP)</label><input type="number" id="fMax" placeholder="Sin límite" step="100000"></div>
+  <div><label>Estrellas mín.</label><select id="fEst"><option value="4">4★</option><option value="5">5★</option></select></div>
+  <div><label>Compra</label><select id="fCompra"><option value="sep">Separado (vuelo + hotel)</option><option value="paq">Paquete</option></select></div>
+  <div class="chk"><input type="checkbox" id="fDir"><label for="fDir" style="margin:0;color:var(--txt);font-size:14px">Solo vuelos directos</label></div>
+</section>
+
+<div id="paqNota" class="note" hidden>📦 <b>Paquetes:</b> Despegar, Cocha, Falabella y Atrápalo no tienen API y sus términos prohíben la extracción automática. Para comparar, abre el enlace "Paquete" de cada tarjeta con las mismas fechas: si el paquete cuesta menos que el total separado que ves aquí, conviene el paquete.</div>
+
+<section id="hero"></section>
+<h3>Top 5 precio-calidad</h3>
+<div class="grid" id="cards"></div>
+
+<h3>Evolución del precio del vuelo (2 personas)</h3>
+<div class="panel"><div class="legend" id="legend"></div><div id="chart"></div>
+<div class="src">Línea punteada: inicio Black Friday. Incluye historial real de Google Flights para las fechas en seguimiento fijo.</div></div>
+
+<h3>Estado y fuentes</h3>
+<div class="panel src" id="estado"></div>
+</div>
+
+<script>
+let D=null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clp=x=>x==null?'—':'$'+Math.round(x).toLocaleString('es-CL');
+const meses='ene feb mar abr may jun jul ago sep oct nov dic'.split(' ');
+const fch=s=>{const[a,m,d]=s.split('-');return `${+d} ${meses[m-1]}`};
+function tema(){const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark';localStorage.tema=r.dataset.theme}
+if(localStorage.tema)document.documentElement.dataset.theme=localStorage.tema;
+
+function filtrados(){
+  const f={d:$('fDest').value,desde:$('fDesde').value,hasta:$('fHasta').value,n:$('fNoches').value,
+    max:+$('fMax').value||Infinity,est:+$('fEst').value,dir:$('fDir').checked};
+  return D.candidatos.filter(c=>(!f.d||c.destino===f.d)&&c.salida>=f.desde&&c.regreso<=f.hasta&&
+    (!f.n||c.noches==f.n)&&c.total_clp<=f.max&&(c.hotel.estrellas||0)>=f.est&&(!f.dir||c.vuelo.escalas===0));
+}
+function usd(x){return D.usd_clp?` <span class="sub">≈ US$${Math.round(x/D.usd_clp).toLocaleString('es-CL')}</span>`:''}
+function desc(c){
+  if(c.descuento_pct==null)return '<span class="sub">Sin línea base aún</span>';
+  return c.descuento_pct>0?`<span class="down">▼ ${c.descuento_pct.toFixed(0)}% bajo precio base pre-Black Friday (${esc(c.base_tipo)})</span>`
+    :`<span class="up">▲ ${(-c.descuento_pct).toFixed(0)}% sobre precio base</span>`;
+}
+function verif(c){
+  if(c.inflado)return '<span class="chip bad">⚠ Posible precio inflado antes de Black Friday</span>';
+  if(c.descuento_pct!=null&&c.descuento_pct<2&&!c.antes_bf)return '<span class="chip no">⚠ Sin rebaja real vs base</span>';
+  return c.verificado?`<span class="chip ok">✔ Verificado: ${esc(c.verificacion)}</span>`
+    :`<span class="chip no">◐ No verificado (1 fuente: Google Flights + Google Hotels)</span>`;
+}
+function paquete(c){return 'https://www.despegar.cl/paquetes/'}
+function card(c,i){
+  const v=c.vuelo,h=c.hotel,base=c.base_total_clp;
+  const esc_=v.escalas===0?'directo':`${v.escalas} escala(s)`;
+  return `<article class="card">
+  <div class="top"><div><div class="rank">#${i+1} · 🇧🇷 ${esc(c.destino_nombre)}</div><p class="dest">${fch(c.salida)} → ${fch(c.regreso)} · ${c.noches} noches</p></div><span class="score">${Math.round(c.puntaje)}</span></div>
+  <div><span class="price">${clp(c.total_clp)}</span>${base&&base>c.total_clp?`<span class="old">${clp(base)}</span>`:''} <span class="sub">para 2</span>${usd(c.total_clp)}</div>
+  <div class="row"><span class="chip">✈️ ${esc(v.aerolinea)} ${esc_} · ${Math.floor(v.duracion_min/60)}h${String(v.duracion_min%60).padStart(2,'0')}</span><span class="chip">🧳 ${esc(v.equipaje)}</span>${v.hora_salida?`<span class="chip">🕘 sale ${esc(v.hora_salida)}</span>`:''}${v.retraso_frecuente?'<span class="chip no">⏱ suele atrasarse +30 min</span>':''}</div>
+  <div class="row"><span class="chip">🏨 ${h.estrellas||'?'}★ ${esc(h.zona)}</span><span class="chip">⭐ ${h.nota??'?'}/5 (${(h.resenas||0).toLocaleString('es-CL')})</span><span class="chip">🍳 desayuno: ${esc(h.desayuno)}</span><span class="chip">↩️ cancelación: ${esc(h.cancelacion)}</span></div>
+  <div class="sub">${esc(h.nombre)} · vuelo ${clp(v.precio_clp)} + hotel ${clp(h.precio_total_clp)}${c.nota_destino?' · '+esc(c.nota_destino):''}</div>
+  <div class="row">${verif(c)}</div>
+  <div class="why"><b>${c.recomendacion}</b>: ${esc(c.razon)}. ${esc(c.explicacion)}</div>
+  <div class="btns"><a class="btn" target="_blank" rel="noopener" href="${esc(v.link)}">Vuelo</a><a class="btn btn2" target="_blank" rel="noopener" href="${esc(h.link)}">Hotel</a><a class="btn btn2" target="_blank" rel="noopener" href="${paquete(c)}">Paquete</a></div>
+  <div class="src">Consultado ${esc(v.ts.slice(0,16).replace('T',' '))} UTC · ${esc(v.fuente)} / ${esc(h.fuente)}</div>
+  </article>`;
+}
+function hero(c){
+  if(!c)return `<div class="panel empty">Aún no hay combinaciones vuelo + hotel con estos filtros.<br>La línea base se va llenando con cada búsqueda diaria.</div>`;
+  const buy=c.recomendacion==='COMPRAR';
+  return `<div class="hero"><div><div class="sub">🏆 MEJOR OPCIÓN SEGÚN FILTROS</div>
+  <h2>${esc(c.destino_nombre)} · ${fch(c.salida)} → ${fch(c.regreso)} 2027 (${c.noches} noches)</h2>
+  <div class="big">${clp(c.total_clp)} CLP${usd(c.total_clp)}</div><div>${desc(c)}</div>
+  <div class="sub">${esc(c.vuelo.aerolinea)} ${c.vuelo.escalas===0?'directo':c.vuelo.escalas+' escala(s)'} + ${esc(c.hotel.nombre)} ${c.hotel.estrellas}★ (⭐ ${c.hotel.nota}/5 · ${c.hotel.resenas} reseñas)</div></div>
+  <div class="verdict ${buy?'buy':'wait'}"><b>${buy?'✅ COMPRAR':'⏳ ESPERAR'}</b><div class="sub">${esc(c.razon)}</div></div></div>`;
+}
+function grafico(){
+  const colores=['#34d399','#60a5fa','#fbbf24','#f472b6','#a78bfa','#fb923c','#22d3ee','#f87171','#a3e635','#e879f9'];
+  const nombres=Object.fromEntries(D.destinos.map(d=>[d.id,d.nombre]));
+  const S=Object.entries(D.series_seguimiento).map(([k,v])=>[k,v]);
+  const dsel=$('fDest').value;
+  Object.entries(D.series_destino).forEach(([k,v])=>{if((!dsel||k===dsel)&&v.length>1)S.push(['Mejor '+(nombres[k]||k),v])});
+  if(!S.length){$('chart').innerHTML='<div class="empty">Se necesita más de un día de datos para graficar.</div>';$('legend').innerHTML='';return}
+  const pts=S.flatMap(s=>s[1]);const fechas=[...new Set(pts.map(p=>p[0]))].sort();
+  const ps=pts.map(p=>p[1]);const lo=Math.min(...ps)*.97,hi=Math.max(...ps)*1.03;
+  const W=700,H=240,x=f=>60+(fechas.indexOf(f)/(Math.max(fechas.length-1,1)))*620,y=p=>210-(p-lo)/(hi-lo||1)*190;
+  let g='';for(let i=0;i<=3;i++){const p=lo+(hi-lo)*i/3;g+=`<line x1="60" x2="690" y1="${y(p)}" y2="${y(p)}" stroke="var(--line)"/><text x="54" y="${y(p)+4}" text-anchor="end">${(p/1e6).toFixed(2)}M</text>`}
+  const bf=fechas.findIndex(f=>f>=D.inicio_black_friday);if(bf>=0)g+=`<line x1="${x(fechas[bf])}" x2="${x(fechas[bf])}" y1="15" y2="212" stroke="#98a2b3" stroke-dasharray="5 4"/>`;
+  [0,Math.floor(fechas.length/2),fechas.length-1].forEach(i=>{if(fechas[i])g+=`<text x="${x(fechas[i])}" y="230" text-anchor="middle">${fechas[i].slice(5).split('-').reverse().join('-')}</text>`});
+  S.forEach(([k,v],i)=>{g+=`<polyline fill="none" stroke="${colores[i%10]}" stroke-width="2.5" points="${v.map(p=>x(p[0])+','+y(p[1])).join(' ')}"><title>${esc(k)}</title></polyline>`});
+  $('chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%">${g}</svg>`;
+  $('legend').innerHTML=S.map(([k],i)=>`<span><i style="background:${colores[i%10]}"></i>${esc(k)}</span>`).join('');
+}
+function render(){
+  $('paqNota').hidden=$('fCompra').value!=='paq';
+  const L=filtrados();
+  $('hero').innerHTML=hero(L[0]);
+  $('cards').innerHTML=L.slice(0,5).map(card).join('')||'';
+  grafico();
+}
+fetch('data.json?'+Date.now()).then(r=>r.json()).then(d=>{
+  D=d;
+  $('meta').textContent=`Actualizado ${d.generado_chile} (hora Chile) · 2 adultos · habitación doble · precios con impuestos según la fuente`;
+  d.destinos.forEach(x=>$('fDest').insertAdjacentHTML('beforeend',`<option value="${esc(x.id)}">${esc(x.nombre)}</option>`));
+  const e=d.estado;
+  $('estado').innerHTML=`Modo: <b>${esc(e.modo)}</b> · búsquedas usadas en esta corrida: ${e.busquedas_usadas} · restantes en SerpApi: ${d.busquedas_restantes_cuenta??'?'}<br>
+  Datos guardados: ${d.total_vuelos_guardados} opciones de vuelo, ${d.total_hoteles_guardados} hoteles<br>
+  Tipo de cambio: ${d.usd_clp?`US$1 = ${clp(d.usd_clp)} (${esc(d.usd_fuente)}, ${esc(d.usd_fecha)})`:'no disponible: solo se muestra CLP'}<br>
+  ${e.errores.length?'<span class="bad">Errores: '+e.errores.map(esc).join(' · ')+'</span>':'<span class="ok">Sin errores en la última corrida</span>'}<br>
+  Fuentes: vuelos → Google Flights vía SerpApi · hoteles, notas y reseñas → Google Hotels vía SerpApi · puntualidad → indicador "suele atrasarse" de Google Flights.
+  Precios de vuelo = ida y vuelta para 2 adultos según Google Flights; el equipaje en bodega con costo NO está sumado.`;
+  ['fDest','fDesde','fHasta','fNoches','fMax','fEst','fCompra','fDir'].forEach(i=>$(i).addEventListener('input',render));
+  render();
+}).catch(()=>{$('meta').textContent='No se pudo cargar data.json'});
+</script>
+</body>
+</html>

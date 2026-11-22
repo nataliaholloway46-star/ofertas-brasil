@@ -1,0 +1,85 @@
+# ==========================================================
+#  CONFIGURACION  -  edita aqui sin tocar el codigo
+# ==========================================================
+
+viaje:
+  origen: SCL
+  adultos: 2
+  fecha_desde: "2027-03-01"     # primera fecha de salida posible
+  fecha_hasta: "2027-04-30"     # ultima fecha de regreso posible
+  noches_min: 7
+  noches_max: 10
+  presupuesto_max_clp: null     # null = sin limite
+
+# Destinos. activo: true/false para incluir o sacar.
+# prioridad: 1 = se revisa todos los dias; 2 = rota con los demas.
+# aeropuertos: codigos IATA (varios separados por coma).
+# zonas: barrios recomendados para buscar hotel (se rotan).
+destinos:
+  - {id: FLN, nombre: "Florianópolis", pais: Brasil, aeropuertos: "FLN", activo: true, prioridad: 1,
+     zonas: ["Jurerê Internacional", "Lagoa da Conceição", "Ingleses"]}
+  - {id: RIO, nombre: "Río de Janeiro", pais: Brasil, aeropuertos: "GIG,SDU", activo: true, prioridad: 2,
+     zonas: ["Ipanema", "Leblon", "Copacabana"]}
+  - {id: BUZ, nombre: "Búzios", pais: Brasil, aeropuertos: "GIG,CFB", activo: true, prioridad: 2,
+     zonas: ["Geribá, Búzios", "Centro, Armação dos Búzios"], nota: "Desde GIG son ~2h30 de traslado"}
+  - {id: SSA, nombre: "Salvador de Bahía", pais: Brasil, aeropuertos: "SSA", activo: true, prioridad: 2,
+     zonas: ["Barra, Salvador", "Rio Vermelho, Salvador"]}
+  - {id: MCZ, nombre: "Maceió", pais: Brasil, aeropuertos: "MCZ", activo: true, prioridad: 2,
+     zonas: ["Pajuçara, Maceió", "Ponta Verde, Maceió"]}
+  - {id: PDG, nombre: "Porto de Galinhas", pais: Brasil, aeropuertos: "REC", activo: true, prioridad: 2,
+     zonas: ["Porto de Galinhas", "Muro Alto, Ipojuca"], nota: "Desde REC son ~1h15 de traslado"}
+  - {id: NAT, nombre: "Natal", pais: Brasil, aeropuertos: "NAT", activo: true, prioridad: 2,
+     zonas: ["Ponta Negra, Natal"]}
+  - {id: FOR, nombre: "Fortaleza", pais: Brasil, aeropuertos: "FOR", activo: true, prioridad: 2,
+     zonas: ["Meireles, Fortaleza", "Praia de Iracema, Fortaleza"]}
+  - {id: IGU, nombre: "Foz do Iguaçu", pais: Brasil, aeropuertos: "IGU", activo: true, prioridad: 2,
+     zonas: ["Centro, Foz do Iguaçu", "Rodovia das Cataratas, Foz do Iguaçu"]}
+
+# Fechas fijas que se revisan SIEMPRE (para comparar el mismo viaje dia a dia
+# y detectar rebajas falsas). Formato: [salida, regreso].
+seguimiento_fijo:
+  FLN: [["2027-03-06", "2027-03-14"], ["2027-03-13", "2027-03-21"], ["2027-04-10", "2027-04-18"]]
+
+# Presupuesto de busquedas SerpApi (plan gratis = 250 al mes)
+busquedas:
+  max_por_dia_normal: 5
+  max_por_dia_intensivo: 12
+  reserva_minima: 15            # nunca bajar de esto (para verificar ofertas)
+  dias_reuso_hotel: 3           # reusar busqueda de hotel si tiene menos de N dias
+  intensivo_desde: "2026-11-26" # Black Friday / Cyber Monday: revisar mas seguido
+  intensivo_hasta: "2026-12-02"
+  inicio_black_friday: "2026-11-27"   # todo lo anterior cuenta como "precio base"
+
+# Calidad minima (si no cumple, no se recomienda)
+calidad_minima:
+  hotel_nota_min_5: 4.2         # nota Google de 0 a 5 (equivale aprox. a 8,4/10)
+  hotel_estrellas_min: 4
+  hotel_resenas_min: 100
+  escala_max_horas: 4
+  escalas_max: 1
+
+# Pesos del puntaje (suman 1.0). Sube el que te importe mas.
+pesos:
+  precio: 0.40
+  vuelo: 0.25
+  hotel: 0.25
+  oferta_real: 0.10
+
+# Alertas
+alertas:
+  descuento_min_pct: 15         # % bajo la linea base para considerar "buena oferta"
+  puntaje_min: 75               # puntaje minimo para alertar
+  hora_resumen_chile: 9         # resumen diario a esta hora (Chile)
+  rebaja_extra_para_repetir_pct: 3   # no repetir alerta salvo que baje 3% mas
+
+# Reputacion de aerolineas (0-100), editable. Fuente: tu criterio + datos de
+# atrasos que entrega Google Flights ("often delayed") en cada vuelo.
+aerolineas:
+  LATAM: 85
+  Sky Airline: 70
+  JetSMART: 60
+  GOL: 72
+  Azul: 80
+  Aerolineas Argentinas: 65
+  Copa Airlines: 80
+  default: 65
