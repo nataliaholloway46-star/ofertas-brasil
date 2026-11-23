@@ -6,19 +6,14 @@
   "por_persona_max": 450000,
   "priorizar_rango": true
  },
- "generado": "2026-11-23T13:06:06+00:00",
- "generado_chile": "23-11-2026 10:06",
+ "generado": "2026-11-23T13:17:05+00:00",
+ "generado_chile": "23-11-2026 10:17",
  "estado": {
   "errores": [],
   "busquedas_usadas": 0,
   "modo": "normal",
   "gmail": "Gmail no configurado",
-  "envios": [
-   {
-    "telegram": "ok",
-    "email": "Email no configurado"
-   }
-  ]
+  "envios": []
  },
  "usd_clp": null,
  "usd_fecha": null,
