@@ -6,8 +6,8 @@
   "por_persona_max": 450000,
   "priorizar_rango": true
  },
- "generado": "2026-11-23T21:47:17+00:00",
- "generado_chile": "23-11-2026 18:47",
+ "generado": "2026-11-24T00:56:34+00:00",
+ "generado_chile": "23-11-2026 21:56",
  "estado": {
   "errores": [],
   "busquedas_usadas": 0,
@@ -15,9 +15,9 @@
   "gmail": "Gmail no configurado",
   "envios": []
  },
- "usd_clp": null,
- "usd_fecha": null,
- "usd_fuente": "no disponible",
+ "usd_clp": 1017.17,
+ "usd_fecha": "2026-11-23",
+ "usd_fuente": "mindicador.cl (dólar observado)",
  "busquedas_restantes_cuenta": 238,
  "inicio_black_friday": "2026-11-27",
  "destinos": [
