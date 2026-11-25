@@ -6,18 +6,23 @@
   "por_persona_max": 450000,
   "priorizar_rango": true
  },
- "generado": "2026-11-25T10:04:31+00:00",
- "generado_chile": "25-11-2026 07:04",
+ "generado": "2026-11-25T13:10:43+00:00",
+ "generado_chile": "25-11-2026 10:10",
  "estado": {
   "errores": [],
   "busquedas_usadas": 0,
   "modo": "normal",
   "gmail": "Gmail no configurado",
-  "envios": []
+  "envios": [
+   {
+    "telegram": "ok",
+    "email": "Email no configurado"
+   }
+  ]
  },
- "usd_clp": 1025.06,
- "usd_fecha": "2026-11-25",
- "usd_fuente": "mindicador.cl (dólar observado)",
+ "usd_clp": null,
+ "usd_fecha": null,
+ "usd_fuente": "no disponible",
  "busquedas_restantes_cuenta": 228,
  "inicio_black_friday": "2026-11-27",
  "destinos": [
