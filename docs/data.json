@@ -6,24 +6,19 @@
   "por_persona_max": 450000,
   "priorizar_rango": true
  },
- "generado": "2026-11-26T13:08:07+00:00",
- "generado_chile": "26-11-2026 10:08",
+ "generado": "2026-11-26T13:18:48+00:00",
+ "generado_chile": "26-11-2026 10:18",
  "estado": {
   "errores": [],
-  "busquedas_usadas": 3,
+  "busquedas_usadas": 1,
   "modo": "intensivo",
   "gmail": "Gmail no configurado",
-  "envios": [
-   {
-    "telegram": "ok",
-    "email": "Email no configurado"
-   }
-  ]
+  "envios": []
  },
  "usd_clp": null,
  "usd_fecha": null,
  "usd_fuente": "no disponible",
- "busquedas_restantes_cuenta": 220,
+ "busquedas_restantes_cuenta": 217,
  "inicio_black_friday": "2026-11-27",
  "destinos": [
   {
@@ -4770,6 +4765,6 @@
    ]
   ]
  },
- "total_vuelos_guardados": 205,
+ "total_vuelos_guardados": 213,
  "total_hoteles_guardados": 118
 }
