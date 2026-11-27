@@ -6,24 +6,19 @@
   "por_persona_max": 450000,
   "priorizar_rango": true
  },
- "generado": "2026-11-27T13:04:18+00:00",
- "generado_chile": "27-11-2026 10:04",
+ "generado": "2026-11-27T13:15:34+00:00",
+ "generado_chile": "27-11-2026 10:15",
  "estado": {
   "errores": [],
   "busquedas_usadas": 6,
   "modo": "intensivo",
   "gmail": "Gmail no configurado",
-  "envios": [
-   {
-    "telegram": "ok",
-    "email": "Email no configurado"
-   }
-  ]
+  "envios": []
  },
  "usd_clp": null,
  "usd_fecha": null,
  "usd_fuente": "no disponible",
- "busquedas_restantes_cuenta": 195,
+ "busquedas_restantes_cuenta": 189,
  "inicio_black_friday": "2026-11-27",
  "destinos": [
   {
