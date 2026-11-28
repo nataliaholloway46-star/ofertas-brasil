@@ -6,19 +6,24 @@
   "por_persona_max": 450000,
   "priorizar_rango": true
  },
- "generado": "2026-11-28T09:47:43+00:00",
- "generado_chile": "28-11-2026 06:47",
+ "generado": "2026-11-28T12:52:14+00:00",
+ "generado_chile": "28-11-2026 09:52",
  "estado": {
   "errores": [],
   "busquedas_usadas": 6,
   "modo": "intensivo",
   "gmail": "Gmail no configurado",
-  "envios": []
+  "envios": [
+   {
+    "telegram": "ok",
+    "email": "Email no configurado"
+   }
+  ]
  },
  "usd_clp": 1037.91,
  "usd_fecha": "2026-11-27",
  "usd_fuente": "mindicador.cl (dólar observado)",
- "busquedas_restantes_cuenta": 147,
+ "busquedas_restantes_cuenta": 141,
  "inicio_black_friday": "2026-11-27",
  "destinos": [
   {
@@ -139,7 +144,7 @@
    "verificado": false,
    "referencia_pp": 450000,
    "iguala_paquete": true,
-   "verificacion": "vuelo: 2 vendedores confirman precio (±5%); hotel: 1 de 3 agencias con precio ±5%"
+   "verificacion": "vuelo: 1 vendedores confirman precio (±5%); hotel: 1 de 3 agencias con precio ±5%"
   },
   {
    "destino": "FLN",
@@ -212,7 +217,7 @@
    "verificado": false,
    "referencia_pp": 450000,
    "iguala_paquete": true,
-   "verificacion": "vuelo: 9 vendedores confirman precio (±5%); hotel: 1 de 1 agencias con precio ±5%"
+   "verificacion": "vuelo: 1 vendedores confirman precio (±5%); hotel: 1 de 2 agencias con precio ±5%"
   },
   {
    "destino": "FLN",
